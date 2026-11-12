@@ -1,0 +1,31 @@
+# POD 2 : student-service (2nd microservice)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod2-student-service
+  labels:
+    app: pod2-student-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod2-student-service
+  template:
+    metadata:
+      labels:
+        app: pod2-student-service
+    spec:
+      containers:
+        - name: student-service
+          image: student-service:1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4002
+          env:
+            - name: PORT
+              value: "4002"
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_URI

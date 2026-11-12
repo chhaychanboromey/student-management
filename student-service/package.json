@@ -1,0 +1,14 @@
+{
+  "name": "student-service",
+  "version": "1.0.0",
+  "description": "Student microservice (search, login, update, delete)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.0",
+    "mongoose": "^8.7.0"
+  }
+}

@@ -1,0 +1,43 @@
+# POD 1 : api-gateway + registration-service (two containers in one pod)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod1-gateway-registration
+  labels:
+    app: pod1-gateway-registration
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod1-gateway-registration
+  template:
+    metadata:
+      labels:
+        app: pod1-gateway-registration
+    spec:
+      containers:
+        - name: api-gateway
+          image: api-gateway:1.0
+          imagePullPolicy: Never          # image is built inside Minikube
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: REGISTRATION_URL      # same pod -> localhost
+              value: "http://localhost:4001"
+            - name: STUDENT_URL           # other pod -> Service name
+              value: "http://student-service:4002"
+        - name: registration-service
+          image: registration-service:1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4001
+          env:
+            - name: PORT
+              value: "4001"
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_URI
